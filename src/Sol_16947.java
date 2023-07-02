@@ -5,22 +5,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Sol_16947 {
-    static class Node{
-        private int nodeNum;
-
-        public Node(int nodeNum) {
-            this.nodeNum = nodeNum;
-        }
-
-        public int getNodeNum() {
-            return nodeNum;
-        }
-
-        public void setNodeNum(int nodeNum) {
-            this.nodeNum = nodeNum;
-        }
-    }
-    static ArrayList<Node>[] adjacencyList;
+    static ArrayList<Integer>[] adjacencyList;
     static boolean[] isCycle, isVisited;
     static int cycleStart = -1;
     static int cycleEnd = -1;
@@ -42,8 +27,8 @@ public class Sol_16947 {
             StringTokenizer st = new StringTokenizer(br.readLine());
             int n1 = Integer.parseInt(st.nextToken());
             int n2 = Integer.parseInt(st.nextToken());
-            adjacencyList[n1].add(new Node(n2));
-            adjacencyList[n2].add(new Node(n1));
+            adjacencyList[n1].add(n2);
+            adjacencyList[n2].add(n1);
         }
         // 먼저 사이클을 형성하는 노드들을 알아내야함
         dfs(1, 1);
@@ -52,24 +37,24 @@ public class Sol_16947 {
             if (isCycle[i]) {
                 sb.append(0 + " ");
             } else {
-                Queue<Node> q = new LinkedList<>();
+                Queue<Integer> q = new LinkedList<>();
                 int[] dist = new int[N + 1];
                 isVisited = new boolean[N + 1];
 
-                q.offer(new Node(i));
+                q.offer(i);
                 while (!q.isEmpty()) {
-                    Node currNode = q.poll();
-                    if (isVisited[currNode.getNodeNum()]) {
+                    int currNode = q.poll();
+                    if (isVisited[currNode]) {
                         continue;
                     }
-                    if (isCycle[currNode.getNodeNum()]) {
-                        sb.append(dist[currNode.getNodeNum()] + " ");
+                    if (isCycle[currNode]) {
+                        sb.append(dist[currNode] + " ");
                         break;
                     }
-                    isVisited[currNode.getNodeNum()] = true;
-                    for (Node node : adjacencyList[currNode.getNodeNum()]) {
+                    isVisited[currNode] = true;
+                    for (int node : adjacencyList[currNode]) {
                         q.offer(node);
-                        dist[node.getNodeNum()] = dist[currNode.getNodeNum()] + 1;
+                        dist[node] = dist[currNode] + 1;
                     }
                 }
             }
@@ -79,8 +64,8 @@ public class Sol_16947 {
 
     public static void dfs(int parent, int curr) {
         isVisited[curr] = true;
-        for (Node node : adjacencyList[curr]) {
-            int nextNodeNum = node.getNodeNum();
+        for (int node : adjacencyList[curr]) {
+            int nextNodeNum = node;
             if (nextNodeNum == parent) {
                 continue;
             }
